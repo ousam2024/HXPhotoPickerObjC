@@ -523,7 +523,13 @@
     photoModel.asset = asset;
     // ios13之后可能不准，但是无关紧要。
     // 因为在获取的时候已经做了iCloud判断了。这里只是在展示的时候方便辨别
-    BOOL isICloud = [[asset valueForKey:@"isCloudPlaceholder"] boolValue];
+    BOOL isICloud = NO;
+    if ([asset respondsToSelector:NSSelectorFromString(@"isCloudPlaceholder")]) {
+        id value = [asset valueForKey:@"isCloudPlaceholder"];
+        if (value && [value isKindOfClass:[NSNumber class]]) {
+            isICloud = [value boolValue];
+        }
+    }
     if (isICloud) {
         if (_iCloudAssetArray.count) {
             if (![_iCloudAssetArray containsObject:asset]) {

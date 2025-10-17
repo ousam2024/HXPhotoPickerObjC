@@ -2363,11 +2363,12 @@ HX_PhotoEditViewControllerDelegate
     }];
 }
 - (void)initSession {
+    HXWeakSelf
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self.cameraController initSeesion];
-        self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:self.cameraController.captureSession];
-        HXWeakSelf
-        [self.cameraController setupPreviewLayer:self.previewLayer startSessionCompletion:^(BOOL success) {
+        if (!weakSelf) return;
+        [weakSelf.cameraController initSeesion];
+        weakSelf.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession:weakSelf.cameraController.captureSession];
+        [weakSelf.cameraController setupPreviewLayer:weakSelf.previewLayer startSessionCompletion:^(BOOL success) {
             if (!weakSelf) {
                 return;
             }

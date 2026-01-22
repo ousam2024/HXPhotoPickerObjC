@@ -1114,7 +1114,7 @@ NSString *const hx_kKeyContentIdentifier = @"com.apple.quicktime.content.identif
                 statusBarHeight = HX_IS_IPhoneX_All ? 44: 20;
             }
             if (@available(iOS 26.0, *)) {
-                if (statusBarHeight == 44) {
+                if (statusBarHeight >= 44) {
                     statusBarHeight = 62;
                 }
             }

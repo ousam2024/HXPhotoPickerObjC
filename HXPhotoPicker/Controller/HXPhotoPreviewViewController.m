@@ -61,6 +61,7 @@ HX_PhotoEditViewControllerDelegate
 @property (assign, nonatomic) BOOL layoutSubviewsCompletion;
 @property (assign, nonatomic) BOOL singleSelectedJumpEdit;
 @property (assign, nonatomic) BOOL didAddBottomPageControl;
+@property (strong, nonatomic) NSLayoutConstraint *selectBtnHeightConstraint;
 @end
 
 @implementation HXPhotoPreviewViewController
@@ -596,6 +597,9 @@ HX_PhotoEditViewControllerDelegate
     }
     [self changeColor];
     self.firstChangeFrame = YES;
+    if (@available(iOS 26.0, *)) {
+        self.navigationItem.rightBarButtonItem.hidesSharedBackground = YES;
+    }
 }
 - (void)didSelectClick:(UIButton *)button {
     if (self.modelArray.count <= 0 || self.outside) {
@@ -1595,9 +1599,17 @@ HX_PhotoEditViewControllerDelegate
         [_selectBtn setBackgroundImage:[[UIImage alloc] init] forState:UIControlStateSelected];
         _selectBtn.titleLabel.font = [UIFont hx_mediumPingFangOfSize:16];;
         [_selectBtn addTarget:self action:@selector(didSelectClick:) forControlEvents:UIControlEventTouchUpInside];
-        _selectBtn.hx_size = CGSizeMake(24, 24);
+        if (@available(iOS 26.0, *)) {
+            _selectBtn.translatesAutoresizingMaskIntoConstraints = NO;
+            _selectBtn.hx_w = 24;
+            self.selectBtnHeightConstraint = [_selectBtn.heightAnchor constraintEqualToConstant:36];
+            self.selectBtnHeightConstraint.active = YES;
+            _selectBtn.layer.cornerRadius = 18;
+        } else {
+            _selectBtn.hx_size = CGSizeMake(24, 24);
+            _selectBtn.layer.cornerRadius = 12;
+        }
         [_selectBtn hx_setEnlargeEdgeWithTop:0 right:0 bottom:20 left:20];
-        _selectBtn.layer.cornerRadius = 12;
     }
     return _selectBtn;
 }
